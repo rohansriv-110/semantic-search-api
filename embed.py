@@ -11,4 +11,4 @@ f.close()
 model=SentenceTransformer("all-MiniLM-L6-v2")    
 embeddings = model.encode(sentences, normalize_embeddings=True)
 print(embeddings.shape)
-
+np.save("data/embeddings.npy", embeddings)
