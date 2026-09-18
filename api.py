@@ -1,6 +1,6 @@
 import os
 import psycopg
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
 from contextlib import asynccontextmanager
 from sentence_transformers import SentenceTransformer
 
@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 @app.get("/search")
-def search(q: str, k: int = 5):
+def search(q: str = Query(..., min_length=1), k: int = Query(5, ge=1, le=20)):
     vec = shelf["model"].encode([q], normalize_embeddings=True)[0]
     with shelf["conn"].cursor() as cur:
         cur.execute(
