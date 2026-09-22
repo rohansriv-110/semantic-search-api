@@ -19,6 +19,8 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/search")
 def search(q: str = Query(..., min_length=1), k: int = Query(5, ge=1, le=20)):
+    if not q.strip():
+        raise HTTPException(status_code=400, detail="q cannot be blank")
     vec = shelf["model"].encode([q], normalize_embeddings=True)[0]
     with shelf["conn"].cursor() as cur:
         cur.execute(
