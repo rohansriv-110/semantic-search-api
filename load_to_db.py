@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import psycopg
 
@@ -10,7 +11,7 @@ f.close()
 
 embeddings = np.load("data/embeddings.npy")
 
-conn = psycopg.connect("postgresql://postgres:devpass@localhost:5432/postgres")
+conn = psycopg.connect(os.getenv("DATABASE_URL", "postgresql://postgres:devpass@localhost:5432/postgres"))
 cur = conn.cursor()
 
 for text, vec in zip(sentences, embeddings):
