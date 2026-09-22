@@ -24,7 +24,7 @@ def search(q: str = Query(..., min_length=1), k: int = Query(5, ge=1, le=20)):
     vec = shelf["model"].encode([q], normalize_embeddings=True)[0]
     with shelf["conn"].cursor() as cur:
         cur.execute(
-            "SELECT text, 1 - (embedding <=> %s) AS score "
+            "SELECT id, text, 1 - (embedding <=> %s) AS score "
             "FROM sentences ORDER BY embedding <=> %s LIMIT %s",
             (str(vec.tolist()), str(vec.tolist()), k),
         )
